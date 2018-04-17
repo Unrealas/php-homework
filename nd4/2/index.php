@@ -22,6 +22,6 @@ function checkUser($user,$my_user){
     'username' => "admin",
     'password' => "admin123"
     ];
-;
+
 
 var_dump(checkUser($user,$my_user));
