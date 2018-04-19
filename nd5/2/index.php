@@ -36,11 +36,14 @@ $dates = array (
     27 => '1978-01-24 11:52:31',
     28 => '1985-02-07 04:42:43',
     29 => '1997-03-17 09:37:18',
+    30 => '2013-04-19 18:01:01'
 );
+date_default_timezone_set('Europe/Vilnius');
 
 function lessthanfive($v){
-    $y=strtotime("-5 Years");
-    return $v > date("Y-m-d h:i:s", $y);
+
+    $y=strtotime("-5 Year");
+    return $v > date("Y-m-d H:i:s", $y);
 }
 function filter($array){
     $newArray = array_filter($array, "lessthanfive", ARRAY_FILTER_USE_BOTH);
