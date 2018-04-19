@@ -50,3 +50,10 @@ $shopping_cart = [
         'price' => '1.2'
     ]
 ];
+echo "<br>.</br>";
+
+
+$newArray = array_filter($shopping_cart, function($value, $key){
+    //condition
+
+}
