@@ -11,10 +11,10 @@
 </head>
 <body>
 <form action="register.php" method="POST">
-    User: <input type="text" name="username">
-    Pass: <input type="password" name="password">
-    Email: <input type="text" name="email">
-    Name: <input type="text" name="name">
+    User: <input type="text" name="username" required>
+    Pass: <input type="password" name="password" required>
+    Email: <input type="text" name="email" required>
+    Name: <input type="text" name="name" required>
     <input type="submit" value="Submit" name="submit">
 </form>
 
