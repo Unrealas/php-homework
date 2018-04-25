@@ -68,7 +68,6 @@ filter($array, 'fruits');
 filter($array, 'vegetables');
 
 //---------------3-------------\\
-
 echo "<br>";
 
 $strings =['movies','bikes','lakes','beer'];
