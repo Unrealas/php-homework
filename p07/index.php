@@ -16,11 +16,17 @@
     <input type="text" name="email" placeholder="Email" required>
     <input type="submit" value="Submit" name="save_author">
     <br>
+</form>
+<form action="" method="post">
     Post:
     <br>
     <input type="text" name="title" placeholder="Title" required>
     <br>
     <textarea name="content" id="" cols="50" rows="10" placeholder="Content"></textarea>
+    <br>
+    Author: <select name="parent_id">
+        <?php authorSelectList(); ?>
+    </select>
     <br>
     <input type="submit" value="Submit" name="submit_post">
 </form>
@@ -40,14 +46,22 @@ function getDb(){
     return new PDO($dsn, $user, $password);
 }
 
-if(isset($_POST['submit'])):
+if(isset($_POST['save_author'])):
     $data= [];
     $data['name']=$_POST['name'];
     $data['surname']=$_POST['surname'];
     $data['email']=$_POST['email'];
-
     storeAuthor($data);
 endif;
+
+if(isset($_POST['submit_post'])):
+    $data= [];
+    $data['title']=$_POST['title'];
+    $data['content']=$_POST['content'];
+    $data['parent_id']=$_POST['parent_id'];
+    storePost($data);
+endif;
+
 function storeAuthor($data){
     $sql = 'INSERT INTO author (name,surname,email) VALUES (:name,:surname,:email)';
     $sth = getDb()->prepare($sql);
@@ -56,20 +70,20 @@ function storeAuthor($data){
         'surname' => $data['surname'],
         'email' => $data['email'],
     ]);
-    return $sth->rowCount();
 }
-
-
 function storePost($data){
-
     $sql = "INSERT INTO post (title,content, parent_id) VALUES (:title,:content, :parent_id)";
     $sth = getDb()->prepare($sql);
-
     $sth->execute([
         "title" => $data['title'],
         "content" => $data['content'],
         "parent_id" => $data['parent_id']
     ]);
-
-    return $sth->rowCount();
+}
+function authorSelectList(){
+    $sql = "SELECT * FROM author";
+    $sth = getDB()->query($sql);
+    foreach($sth as $row){
+        echo "<option value='". $row['id'] ."'>".$row['name']."</option>";
+    }
 }

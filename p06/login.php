@@ -18,7 +18,7 @@
 <?php if (isset($_SESSION['registered'])): ?>
     <p style="color:#61dc4c">Successfully registred</p>
     <?php unset ($_SESSION['registered']) ?>
-<?php else :?>
+<?php else : ?>
 
 
 
