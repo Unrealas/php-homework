@@ -6,21 +6,39 @@
  * Time: 14:23
  */
 
-function checkUser($user,$my_user){
-    if($user['username'] === $my_user['username'] &&  $user['password'] === $my_user['password']){
+function checkUser($user, $my_user)
+{
+    if ($user['username'] === $my_user['username'] && $user['password'] === $my_user['password']) {
         return true;
-    }
-    else return false;
+    } else return false;
 }
 
-    $user = [
-        'username' => "admin",
-        'password' => "admin123"
-    ];
-
-    $my_user = [
+$user = [
     'username' => "admin",
     'password' => "admin123"
-    ];
+];
 
-var_dump(checkUser($user,$my_user));
+$my_user = [
+    'username' => "admin",
+    'password' => "admin123"
+];
+
+var_dump(checkUser($user, $my_user));
+
+
+function checkUser2($user, $username, $password)
+{
+    if ($user['username'] === $username && $user['password'] === $password) {
+        return true;
+    } else return false;
+}
+
+$user = [
+    'username' => "admin",
+    'password' => "admin123"
+];
+
+$username = "admin";
+$password = "admin123";
+
+var_dump(checkUser2($user, $username, $password));
