@@ -1,0 +1,176 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Category;
+use App\File;
+use App\Post;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
+
+class PostsController extends Controller
+{
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function __construct()
+    {
+        $this->middleware('auth', ['except' => ['index', 'show']]);
+    }
+
+    public function index($cat_id = null)
+    {
+        Storage::disk('public')->put('file.txt', 'Contents');
+
+
+        // echo env("ADMIN_MAIL");
+        // Session::put('raktas','reiksme');
+        // echo Session::get('raktas','reiksme');
+        if (is_null($cat_id))
+            $posts = Post::orderby('updated_at', "DESC")->paginate(3);
+        else
+            $posts = Post::where('category', $cat_id)->orderBy('updated_at', "DESC")->paginate(3);
+        return view('posts.index', ['posts' => $posts]);
+    }
+
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        $cat = Category::all();
+        return view('posts.create', ['cats' => $cat]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @return \Illuminate\Http\Response
+     */
+    public function store(Request $request)
+    {
+        // dd($_FILES['file']);
+        // dd($request->file('file'));
+
+
+        $validatedData = $request->validate([
+            'title' => 'required|max:250|min:3',
+            'content' => 'required|min:5',
+            'file' => 'max:1200',
+        ]);
+
+        $data = $request->all();
+        // dd($data); laravelinis var_dump
+
+        $post = new Post();
+        $post->title = $data['title'];
+        $post->content = $data['content'];
+        $post->category = $data['cat'];
+        $post->user = Auth::user()->id;
+
+        $post->save();
+        if ($request->hasFile('file')) {
+
+            $original_name = $request->file->getClientOriginalName();
+            $path = $request->file('file')->store('files/' . $post->id, 'public');
+
+            $file = new File();
+            $file->post_id = $post->id;
+            $file->name = $original_name;
+            $file->path = $path;
+            $file->save();
+        }
+        $request->session()->flash('status', 'Good job!');
+
+        return redirect(route('home'));
+
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function show($id)
+    {
+        $post = Post::find($id);
+        return view('posts.show', ['post' => $post]);
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function edit($id)
+    {
+        $post = Post::find($id);
+
+        $user = Auth::user();
+        $cat = Category::all();
+        if ($user->can('edit', $post))
+            return view('posts.edit', ['post' => $post, 'cat' => $cat]);
+        else
+            return redirect(route('home'));
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request $request
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, $id)
+    {
+        $validatedData = $request->validate([
+            'title' => 'required|max:250|min:3',
+            'content' => 'required|min:5',
+        ]);
+
+        $data = $request->all();
+
+        $post = Post::find($id);
+
+        $post->title = $data['title'];
+        $post->content = $data['content'];
+        $post->category = $data['cat'];
+        $post->user = Auth::user()->id;
+
+        $post->save();
+
+        $request->session()->flash('status', 'Post updated!');
+
+        return redirect(route('posts.show', ['id' => $post->id]));
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  int $id
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy($id)
+    {
+        $post = Post::find($id);
+        $user = Auth::user();
+
+        if ($user->cant('edit', $post))
+            return redirect(route('home'));
+
+        $post->delete();
+        Session::flash('status', 'Post has been deleted!');
+
+        return redirect(route('home'));
+
+    }
+}
