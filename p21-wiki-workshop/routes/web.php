@@ -28,3 +28,5 @@ Route::resource('posts', 'PostsController');
 Route::resource('categories', 'CategoriesController');
 
 Route::get('admin','AdminController@index')->name('admin_index');
+
+Route::get('/fake','PostsController@fakePost');

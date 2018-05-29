@@ -10,4 +10,7 @@ class Category extends Model
     public function post(){
         return $this->hasMany('App\Post','category');
     }
+    public function cats(){
+        return $this->belongsToMany('App\Post');
+    }
 }

@@ -14,10 +14,13 @@ class Post extends Model
 
             return $this->belongsTo('App\User', 'user');
     }
-    public function categoryObject(){
-        return $this->belongsTo('App\Category', 'category');
+    public function cat(){
+        // kai rysys many to many - visada bus belongs to many
+
+        return $this->belongsToMany('App\Category');
     }
     public function fileObject(){
+        // vienas prie daug
         return $this->hasMany('App\File');
     }
 }

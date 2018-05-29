@@ -6,7 +6,10 @@ use App\Category;
 use App\File;
 use App\Post;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 
@@ -26,6 +29,7 @@ class PostsController extends Controller
     {
         Storage::disk('public')->put('file.txt', 'Contents');
 
+        // Cache::put('posts', Post::all(), 1);
 
         // echo env("ADMIN_MAIL");
         // Session::put('raktas','reiksme');
@@ -45,7 +49,7 @@ class PostsController extends Controller
     public function create()
     {
         $cat = Category::all();
-        return view('posts.create', ['cats' => $cat]);
+        return view('posts.create', ['cat' => $cat]);
     }
 
     /**
@@ -72,10 +76,16 @@ class PostsController extends Controller
         $post = new Post();
         $post->title = $data['title'];
         $post->content = $data['content'];
-        $post->category = $data['cat'];
+        $post->category = 1;
         $post->user = Auth::user()->id;
-
         $post->save();
+
+        foreach ($data['cat'] as $cat_id) {
+            /*  DB::table('category_post')->insert([
+                'category_id' => $cat_id,
+                'post_id' => $post->id]);*/
+            $post->cat()->attach($cat_id);
+        }
         if ($request->hasFile('file')) {
 
             $original_name = $request->file->getClientOriginalName();
@@ -118,7 +128,9 @@ class PostsController extends Controller
         $user = Auth::user();
         $cat = Category::all();
         if ($user->can('edit', $post))
-            return view('posts.edit', ['post' => $post, 'cat' => $cat]);
+            return view('posts.edit', [
+                'post' => $post,
+                    'cat' => $cat]);
         else
             return redirect(route('home'));
     }
@@ -172,5 +184,14 @@ class PostsController extends Controller
 
         return redirect(route('home'));
 
+    }
+
+    // sukurt mygtuka postu kurimui,
+
+    public function fakePost(){
+        Artisan::call('fakePost', [
+            'params' =>
+                [10,100]
+        ]);
     }
 }

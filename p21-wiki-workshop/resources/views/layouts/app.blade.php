@@ -45,7 +45,12 @@
                 </ul>
 
                 <!-- Right Side Of Navbar -->
+
                 <ul class="navbar-nav ml-auto">
+                    <form class="form-inline my-2 my-lg-0">
+                        <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                    </form>
                     <!-- Admin dropdown -->
                     @auth
                     <li class="nav-item dropdown">
@@ -104,11 +109,9 @@
                 <ul class="list-group">
                     @foreach($cats as $cat)
                         <li class="list-group-item d-flex justify-content-between align-items-center">
-                            <a class="dropdown-item" href={{route('posts_by_cat', ['cat_id' =>$cat->id])}}>{{$cat->name}}</a>
-                            <span class="badge badge-success badge-pill">{{$cat->post->count()}}</span>
-
+                            <a class="dropdown-item" href={{route('categories.show', ['cat_id' =>$cat->id])}}>{{$cat->name}}</a>
+                            <span class="badge badge-success badge-pill">{{$cat->cats->count()}}</span>
                         </li>
-
                     @endforeach
                 </ul>
             </div>

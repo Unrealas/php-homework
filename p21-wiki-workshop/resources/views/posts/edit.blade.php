@@ -19,11 +19,16 @@
                             </div>
                             <div class="form-group">
                                 <label for="cat">Category</label>
-                                <select class="form-control" id="cat" name="cat">
-
+                                <select class="form-control" id="cat" name="cat" multiple>
                                     @foreach($cat as $c)
-                                        <option value="{{ $c->id }}" @if($post->category == $c->id) selected @endif>{{ $c->name }}</option>
-
+                                        @foreach($post->cat as $post_cat)
+                                            @php $bool = false @endphp
+                                            @if($post_cat->id == $c->id)
+                                                @php $bool = true @endphp
+                                                @break
+                                            @endif
+                                        @endforeach
+                                            <option value="{{ $c->id }}" @if($bool) selected @endif>{{ $c->name }}</option>
                                     @endforeach
                                 </select>
                             </div>

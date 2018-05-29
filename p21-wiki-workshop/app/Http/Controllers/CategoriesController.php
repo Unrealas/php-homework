@@ -72,9 +72,8 @@ class CategoriesController extends Controller
      */
     public function show($id)
     {
-        $category = Category::find($id);
-        return view('categories.show',['category' => $category]);
-    }
+        $posts = Category::where('id', $id)->paginate(15);
+        return view('categories.show', ['posts' => $posts]);     }
 
     /**
      * Show the form for editing the specified resource.

@@ -18,9 +18,9 @@
                             </div>
                             <div class="form-group">
                                 <label for="cat">Category</label>
-                                <select class="form-control" id="cat" name="cat">
-                                    @foreach($cats as $cat)
-                                        <option value={{$cat->id}}>{{$cat->name}}</option>
+                                <select class="form-control" id="cat" name="cat[]" multiple>
+                                    @foreach($cat as $c)
+                                        <option value="{{ $c->id }}">{{ $c->name }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -33,7 +33,7 @@
                                 <label for="file">Attach file:</label>
                                 <input type="file" name="file" id="file" multiple>
                             </div>
-                            <button type="submit" class="btn btn-suaccess">Submit</button>
+                            <button type="submit" class="btn btn-success">Submit</button>
                             <br>
                             @if ($errors->any())
                                 <div class="alert alert-danger">

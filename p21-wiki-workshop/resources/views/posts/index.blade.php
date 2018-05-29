@@ -29,7 +29,10 @@
                             <p class="card-text">{!!str_limit($post->content,100)!!}
                             </p>
                             <br>
-                            Category : <span class="badge badge-dark">{{$post->categoryObject -> name}}</span>
+
+                            @foreach($post->cat as $cat )
+                                <span class="badge badge-info">{{ $cat->name }}</span>
+                            @endforeach
                             <br>
                             <small>{{$post->created_at}}</small>
                             <br>

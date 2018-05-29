@@ -12,7 +12,10 @@
                             <p class="card-text">{{$post->content}}
                             </p>
                             <br>
-                            Category : <span class="badge badge-dark">{{$post->categoryObject -> name}}</span>
+                            Category/-ies :
+                                @foreach($post->cat as $cat )
+                                    <span class="badge badge-info">{{ $cat->name }}</span>
+                                @endforeach
                             <br>
                             <small>Created at: {{$post->created_at}}  by </small> <span class="badge badge-info">{{$post->thisIsUserObject -> name}}</span>
                             <br>
